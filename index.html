@@ -132,7 +132,7 @@
 
   <!-- 添加作业表单 -->
   <div class="card">
-    <h3>✏️ 添加作业</h3>
+    <h3>添加作业</h3>
     <form id="taskForm">
       <label>科目:</label>
       <input type="text" id="subject" required>
@@ -149,7 +149,7 @@
   <!-- 接下来一周的作业 -->
   <div class="card">
     <h3>
-      ⏰ 接下来一周的作业
+      接下来一周的作业
       <button class="collapse-btn" onclick="toggleUpcoming()">展开/收起</button>
     </h3>
     <div id="upcomingTasks"></div>
@@ -232,7 +232,7 @@
       let div = document.getElementById('taskDetails');
       div.style.display = 'block';
       div.innerHTML = `
-        <h3>📌 作业详情</h3>
+        <h3>作业详情</h3>
         <p><b>科目:</b> ${task.subject}</p>
         <p><b>内容:</b> ${task.content}</p>
         <p><b>布置时间:</b> ${task.assignDate}</p>
