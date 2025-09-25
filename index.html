@@ -262,7 +262,8 @@
       } else {
         result.forEach(t => {
           div.innerHTML += `<div class='task ${t.done ? 'done' : ''} ${isDueSoon(t.dueDate) ? 'highlight' : ''}'>
-            <b>${t.subject}</b> - ${t.content} (布置时间: ${t.assignDate})(提交时间: ${t.dueDate})
+            <div><b>${t.subject}</b> ｜ 布置: ${t.assignDate} ｜ 提交: ${t.dueDate}</div>
+            <div>${t.content}</div>
           </div>`;
         });
       }
