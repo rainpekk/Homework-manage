@@ -7,53 +7,180 @@
   <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    #calendar { max-width: 900px; margin: 20px auto; }
-    .form-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; width: 45%; float: left; }
-    .upcoming-container { margin-left: 50%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-    .task { padding: 5px; border-bottom: 1px solid #ddd; }
-    .done { text-decoration: line-through; color: gray; }
+    :root {
+      --bg: #f7f9fc;
+      --card-bg: #fff;
+      --text: #333;
+      --primary: #3498db;
+      --primary-hover: #2980b9;
+    }
+    [data-theme="dark"] {
+      --bg: #1e1e2f;
+      --card-bg: #2c2c3c;
+      --text: #f1f1f1;
+      --primary: #9b59b6;
+      --primary-hover: #8e44ad;
+    }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 20px;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: -10px;
+    }
+    .btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 0 auto 20px auto;
+      max-width: 900px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: background 0.3s;
+    }
+    input {
+      padding: 8px 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 14px;
+      background: var(--card-bg);
+      color: var(--text);
+    }
+    #searchBar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #search {
+      flex: 1;
+      max-width: 400px;
+      margin-right: 10px;
+    }
+    #calendar {
+      max-width: 900px;
+      margin: 0 auto 30px auto;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+    .task {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .task:last-child {
+      border-bottom: none;
+    }
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .highlight {
+      background: #fef6e4;
+      border-left: 4px solid #f39c12;
+      padding-left: 6px;
+    }
+    [data-theme="dark"] .highlight {
+      background: #3c2e1e;
+      border-left: 4px solid #f1c40f;
+    }
+    #taskDetails {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .collapse-btn {
+      float: right;
+      font-size: 13px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--primary);
+    }
   </style>
 </head>
 <body>
-  <h1>作业管理系统</h1>
+  <div class="top-bar">
+    <button class="btn" onclick="toggleTheme()">🌙 深色模式</button>
+  </div>
+
+  <h1>📚 作业管理系统</h1>
 
   <!-- 添加作业表单 -->
-  <div class="form-container">
-    <h3>添加作业</h3>
+  <div class="card">
+    <h3>✏️ 添加作业</h3>
     <form id="taskForm">
-      科目: <input type="text" id="subject" required><br><br>
-      内容: <input type="text" id="content" required><br><br>
-      布置时间: <input type="date" id="assignDate" required><br><br>
-      提交时间: <input type="date" id="dueDate" required><br><br>
-      <button type="submit">添加</button>
+      <label>科目:</label>
+      <input type="text" id="subject" required>
+      <label>内容:</label>
+      <input type="text" id="content" required>
+      <label>布置时间:</label>
+      <input type="date" id="assignDate" required>
+      <label>提交时间:</label>
+      <input type="date" id="dueDate" required>
+      <button type="submit" class="btn" style="width:100%; margin-top:10px;">添加</button>
     </form>
   </div>
 
   <!-- 接下来一周的作业 -->
-  <div class="upcoming-container">
-    <h3>接下来一周需要提交的作业</h3>
+  <div class="card">
+    <h3>
+      ⏰ 接下来一周的作业
+      <button class="collapse-btn" onclick="toggleUpcoming()">展开/收起</button>
+    </h3>
     <div id="upcomingTasks"></div>
   </div>
 
-  <div style="clear:both;"></div>
-
   <!-- 搜索框 -->
-  <div>
+  <div id="searchBar">
     <input type="text" id="search" placeholder="按科目或内容搜索">
-    <button onclick="searchTasks()">搜索</button>
+    <button class="btn" onclick="searchTasks()">搜索</button>
   </div>
 
   <!-- 日历 -->
   <div id='calendar'></div>
 
-  <!-- 作业详情弹窗 -->
-  <div id="taskDetails" style="display:none; border:1px solid #aaa; padding:10px; margin-top:20px;"></div>
+  <!-- 作业详情/搜索结果 -->
+  <div id="taskDetails" class="card" style="display:none;"></div>
 
   <script>
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let calendar;
+    let darkMode = false;
+    let upcomingVisible = true;
 
+    // 深色模式切换
+    function toggleTheme() {
+      darkMode = !darkMode;
+      document.body.setAttribute("data-theme", darkMode ? "dark" : "light");
+      document.querySelector(".top-bar button").innerText = darkMode ? "☀️ 亮色模式" : "🌙 深色模式";
+    }
+
+    // 添加作业
     document.getElementById('taskForm').addEventListener('submit', function(e) {
       e.preventDefault();
       let task = {
@@ -111,7 +238,7 @@
         <p><b>布置时间:</b> ${task.assignDate}</p>
         <p><b>提交时间:</b> ${task.dueDate}</p>
         <p><b>状态:</b> ${task.done ? '✅ 已提交' : '❌ 未提交'}</p>
-        <button onclick="toggleDone(${task.id})">${task.done ? '标记为未提交' : '标记为已提交'}</button>
+        <button class="btn" onclick="toggleDone(${task.id})">${task.done ? '标记为未提交' : '标记为已提交'}</button>
       `;
     }
 
@@ -134,16 +261,31 @@
         div.innerHTML += '<p>没有找到相关作业</p>';
       } else {
         result.forEach(t => {
-          div.innerHTML += `<div class='task ${t.done ? 'done' : ''}'>
+          div.innerHTML += `<div class='task ${t.done ? 'done' : ''} ${isDueSoon(t.dueDate) ? 'highlight' : ''}'>
             <b>${t.subject}</b> - ${t.content} (提交时间: ${t.dueDate})
           </div>`;
         });
       }
     }
 
+    // 修复输入异常，改用 keydown
+    document.getElementById("search").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        searchTasks();
+      }
+    });
+
     function renderUpcomingTasks() {
       let div = document.getElementById('upcomingTasks');
       div.innerHTML = '';
+      if (!upcomingVisible) {
+        div.style.display = "none";
+        return;
+      } else {
+        div.style.display = "block";
+      }
+
       let today = luxon.DateTime.local();
       let nextWeek = today.plus({ days: 7 });
 
@@ -156,11 +298,22 @@
         div.innerHTML = '<p>一周内没有需要提交的作业 🎉</p>';
       } else {
         upcoming.forEach(t => {
-          div.innerHTML += `<div class='task ${t.done ? "done" : ""}'>
+          div.innerHTML += `<div class='task ${t.done ? "done" : ""} ${isDueSoon(t.dueDate) ? "highlight" : ""}'>
             <b>${t.dueDate}</b> - <b>${t.subject}</b>：${t.content}
           </div>`;
         });
       }
+    }
+
+    function isDueSoon(date) {
+      let today = luxon.DateTime.local();
+      let due = luxon.DateTime.fromISO(date);
+      return due.diff(today, 'days').days <= 2 && due >= today;
+    }
+
+    function toggleUpcoming() {
+      upcomingVisible = !upcomingVisible;
+      renderUpcomingTasks();
     }
 
     renderCalendar();
