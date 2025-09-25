@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>作业管理系统</title>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #calendar { max-width: 900px; margin: 20px auto; }
+    .form-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    .task { padding: 5px; border-bottom: 1px solid #ddd; }
+    .done { text-decoration: line-through; color: gray; }
+  </style>
+</head>
+<body>
+  <h1>📚 我的作业管理系统</h1>
+
+  <!-- 添加作业表单 -->
+  <div class="form-container">
+    <h3>➕ 添加作业</h3>
+    <form id="taskForm">
+      科目: <input type="text" id="subject" required><br><br>
+      内容: <input type="text" id="content" required><br><br>
+      布置时间: <input type="date" id="assignDate" required><br><br>
+      提交时间: <input type="date" id="dueDate" required><br><br>
+      <button type="submit">添加</button>
+    </form>
+  </div>
+
+  <!-- 搜索框 -->
+  <div>
+    <input type="text" id="search" placeholder="按科目或内容搜索">
+    <button onclick="searchTasks()">搜索</button>
+  </div>
+
+  <!-- 日历 -->
+  <div id='calendar'></div>
+
+  <!-- 作业详情弹窗 -->
+  <div id="taskDetails" style="display:none; border:1px solid #aaa; padding:10px; margin-top:20px;"></div>
+
+  <script>
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let calendar;
+
+    document.getElementById('taskForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let task = {
+        id: Date.now(),
+        subject: document.getElementById('subject').value,
+        content: document.getElementById('content').value,
+        assignDate: document.getElementById('assignDate').value,
+        dueDate: document.getElementById('dueDate').value,
+        done: false
+      };
+      tasks.push(task);
+      saveTasks();
+      renderCalendar();
+      this.reset();
+    });
+
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function renderCalendar() {
+      let events = tasks.map(t => ({
+        id: t.id,
+        title: (t.done ? '✅ ' : '📌 ') + t.subject,
+        start: t.dueDate
+      }));
+
+      if (calendar) {
+        calendar.removeAllEvents();
+        events.forEach(ev => calendar.addEvent(ev));
+        return;
+      }
+
+      calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        initialView: 'dayGridMonth',
+        locale: 'zh-cn',
+        events: events,
+        eventClick: function(info) {
+          showTaskDetails(info.event.id);
+        }
+      });
+      calendar.render();
+    }
+
+    function showTaskDetails(taskId) {
+      let task = tasks.find(t => t.id == taskId);
+      if (!task) return;
+      let div = document.getElementById('taskDetails');
+      div.style.display = 'block';
+      div.innerHTML = `
+        <h3>📌 作业详情</h3>
+        <p><b>科目:</b> ${task.subject}</p>
+        <p><b>内容:</b> ${task.content}</p>
+        <p><b>布置时间:</b> ${task.assignDate}</p>
+        <p><b>提交时间:</b> ${task.dueDate}</p>
+        <p><b>状态:</b> ${task.done ? '✅ 已提交' : '❌ 未提交'}</p>
+        <button onclick="toggleDone(${task.id})">${task.done ? '标记为未提交' : '标记为已提交'}</button>
+      `;
+    }
+
+    function toggleDone(id) {
+      let task = tasks.find(t => t.id == id);
+      task.done = !task.done;
+      saveTasks();
+      renderCalendar();
+      showTaskDetails(id);
+    }
+
+    function searchTasks() {
+      let keyword = document.getElementById('search').value.toLowerCase();
+      let result = tasks.filter(t => t.subject.toLowerCase().includes(keyword) || t.content.toLowerCase().includes(keyword));
+      let div = document.getElementById('taskDetails');
+      div.style.display = 'block';
+      div.innerHTML = '<h3>🔍 搜索结果</h3>';
+      if (result.length === 0) {
+        div.innerHTML += '<p>没有找到相关作业</p>';
+      } else {
+        result.forEach(t => {
+          div.innerHTML += `<div class='task ${t.done ? 'done' : ''}'>
+            <b>${t.subject}</b> - ${t.content} (提交时间: ${t.dueDate})
+          </div>`;
+        });
+      }
+    }
+
+    renderCalendar();
+  </script>
+</body>
+</html>
