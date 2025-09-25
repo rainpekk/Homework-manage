@@ -9,7 +9,8 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     #calendar { max-width: 900px; margin: 20px auto; }
-    .form-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    .form-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; width: 45%; float: left; }
+    .upcoming-container { margin-left: 50%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
     .task { padding: 5px; border-bottom: 1px solid #ddd; }
     .done { text-decoration: line-through; color: gray; }
   </style>
@@ -28,6 +29,14 @@
       <button type="submit">添加</button>
     </form>
   </div>
+
+  <!-- 接下来一周的作业 -->
+  <div class="upcoming-container">
+    <h3>接下来一周需要提交的作业</h3>
+    <div id="upcomingTasks"></div>
+  </div>
+
+  <div style="clear:both;"></div>
 
   <!-- 搜索框 -->
   <div>
@@ -58,6 +67,7 @@
       tasks.push(task);
       saveTasks();
       renderCalendar();
+      renderUpcomingTasks();
       this.reset();
     });
 
@@ -110,6 +120,7 @@
       task.done = !task.done;
       saveTasks();
       renderCalendar();
+      renderUpcomingTasks();
       showTaskDetails(id);
     }
 
@@ -130,7 +141,30 @@
       }
     }
 
+    function renderUpcomingTasks() {
+      let div = document.getElementById('upcomingTasks');
+      div.innerHTML = '';
+      let today = luxon.DateTime.local();
+      let nextWeek = today.plus({ days: 7 });
+
+      let upcoming = tasks.filter(t => {
+        let due = luxon.DateTime.fromISO(t.dueDate);
+        return due >= today && due <= nextWeek;
+      }).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+      if (upcoming.length === 0) {
+        div.innerHTML = '<p>一周内没有需要提交的作业 🎉</p>';
+      } else {
+        upcoming.forEach(t => {
+          div.innerHTML += `<div class='task ${t.done ? "done" : ""}'>
+            <b>${t.dueDate}</b> - <b>${t.subject}</b>：${t.content}
+          </div>`;
+        });
+      }
+    }
+
     renderCalendar();
+    renderUpcomingTasks();
   </script>
 </body>
 </html>
