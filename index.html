@@ -13,8 +13,6 @@
       --text: #333;
       --primary: #3498db;
       --primary-hover: #2980b9;
-      --week-bg1: #f9f9f9;
-      --week-bg2: #eef6ff;
     }
     [data-theme="dark"] {
       --bg: #1e1e2f;
@@ -22,8 +20,6 @@
       --text: #f1f1f1;
       --primary: #9b59b6;
       --primary-hover: #8e44ad;
-      --week-bg1: #2a2a3a;
-      --week-bg2: #33334a;
     }
     body {
       font-family: "Segoe UI", Arial, sans-serif;
@@ -32,55 +28,98 @@
       color: var(--text);
       transition: background 0.3s, color 0.3s;
     }
-    h1 { text-align: center; margin-bottom: 30px; }
-    .top-bar { display: flex; justify-content: flex-end; margin-bottom: -10px; }
-    .btn { padding: 8px 12px; border-radius: 6px; border: none; background: var(--primary); color: white; cursor: pointer; transition: background 0.2s; }
-    .btn:hover { background: var(--primary-hover); }
-    .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin: 0 auto 20px auto; max-width: 900px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); transition: background 0.3s; }
-    input { padding: 8px 10px; margin: 5px 0; border-radius: 6px; border: 1px solid #ccc; width: 100%; font-size: 14px; background: var(--card-bg); color: var(--text); }
-    #searchBar { display: flex; justify-content: center; margin-bottom: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
-    #search { flex: 1; max-width: 400px; margin-right: 10px; }
-    #calendar { max-width: 900px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
-    .task { padding: 8px; border-bottom: 1px solid #eee; }
-    .task:last-child { border-bottom: none; }
-    .done { text-decoration: line-through; color: gray; }
-    .highlight { background: #fef6e4; border-left: 4px solid #f39c12; padding-left: 6px; }
-    [data-theme="dark"] .highlight { background: #3c2e1e; border-left: 4px solid #f1c40f; }
-    #taskDetails { max-width: 900px; margin: 0 auto; }
-    .collapse-btn { float: right; font-size: 13px; cursor: pointer; background: none; border: none; color: var(--primary); }
-
-    /* 格子标记 */
-    .day-marker {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      font-size: 14px;
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: -10px;
+    }
+    .btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      background: var(--primary);
+      color: white;
       cursor: pointer;
+      transition: background 0.2s;
     }
-    .marker-done { color: green; }
-    .marker-undone { color: red; }
-
-    /* 悬浮小窗口 */
-    .tooltip-box {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.95);
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 0 auto 20px auto;
+      max-width: 900px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: background 0.3s;
+    }
+    input {
+      padding: 8px 10px;
+      margin: 5px 0;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 10px;
-      max-width: 220px;
-      max-height: 150px;
-      overflow-y: auto;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
-      z-index: 9999;
-      display: none;
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      width: 100%;
+      font-size: 14px;
+      background: var(--card-bg);
+      color: var(--text);
     }
-    .tooltip-box.show {
-      display: block;
-      opacity: 1;
-      transform: scale(1);
+    #searchBar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #search {
+      flex: 1;
+      max-width: 400px;
+      margin-right: 10px;
+    }
+    #calendar {
+      max-width: 900px;
+      margin: 0 auto 30px auto;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+    .task {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .task:last-child {
+      border-bottom: none;
+    }
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .highlight {
+      background: #fef6e4;
+      border-left: 4px solid #f39c12;
+      padding-left: 6px;
+    }
+    [data-theme="dark"] .highlight {
+      background: #3c2e1e;
+      border-left: 4px solid #f1c40f;
+    }
+    #taskDetails {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .collapse-btn {
+      float: right;
+      font-size: 13px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--primary);
     }
   </style>
 </head>
@@ -128,22 +167,20 @@
   <!-- 作业详情/搜索结果 -->
   <div id="taskDetails" class="card" style="display:none;"></div>
 
-  <!-- 悬浮小窗口 -->
-  <div id="tooltip" class="tooltip-box"></div>
-
   <script>
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let calendar;
     let darkMode = false;
     let upcomingVisible = true;
-    const tooltip = document.getElementById("tooltip");
 
+    // 深色模式切换
     function toggleTheme() {
       darkMode = !darkMode;
       document.body.setAttribute("data-theme", darkMode ? "dark" : "light");
       document.querySelector(".top-bar button").innerText = darkMode ? "☀️ 亮色模式" : "🌙 深色模式";
     }
 
+    // 添加作业
     document.getElementById('taskForm').addEventListener('submit', function(e) {
       e.preventDefault();
       let task = {
@@ -161,7 +198,9 @@
       this.reset();
     });
 
-    function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
 
     function renderCalendar() {
       let events = tasks.map(t => ({
@@ -173,55 +212,18 @@
       if (calendar) {
         calendar.removeAllEvents();
         events.forEach(ev => calendar.addEvent(ev));
-      } else {
-        calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-          initialView: 'dayGridMonth',
-          locale: 'zh-cn',
-          events: events,
-          eventClick: function(info) { showTaskDetails(info.event.id); },
-          datesSet: function() { setTimeout(() => { addDayMarkers(); colorWeeks(); }, 50); }
-        });
-        calendar.render();
+        return;
       }
-      addDayMarkers();
-      colorWeeks();
-    }
 
-    function colorWeeks() {
-      document.querySelectorAll(".fc-daygrid-week").forEach((week, i) => {
-        week.style.background = (i % 2 === 0) ? "var(--week-bg1)" : "var(--week-bg2)";
-      });
-    }
-
-    function addDayMarkers() {
-      document.querySelectorAll(".fc-daygrid-day").forEach(cell => {
-        let date = cell.getAttribute("data-date");
-        if (!date) return;
-        let dayTasks = tasks.filter(t => t.dueDate === date);
-        if (dayTasks.length === 0) return;
-        if (cell.querySelector(".day-marker")) return;
-        let marker = document.createElement("span");
-        let allDone = dayTasks.every(t => t.done);
-        marker.className = "day-marker " + (allDone ? "marker-done" : "marker-undone");
-        marker.innerText = allDone ? "✅" : "❌";
-        cell.style.position = "relative";
-        cell.appendChild(marker);
-
-        if (!allDone) {
-          marker.addEventListener("mouseenter", e => {
-            tooltip.innerHTML = "<b>未完成作业:</b><br>" + dayTasks.filter(t => !t.done).map(t => `${t.subject}: ${t.content}`).join("<br>");
-            tooltip.style.left = e.pageX + 10 + "px";
-            tooltip.style.top = e.pageY + 10 + "px";
-            tooltip.classList.add("show");
-          });
-          marker.addEventListener("mousemove", e => {
-            tooltip.style.left = e.pageX + 10 + "px";
-            tooltip.style.top = e.pageY + 10 + "px";
-          });
-          marker.addEventListener("mouseleave", () => { tooltip.classList.remove("show"); });
-          tooltip.addEventListener("mouseleave", () => { tooltip.classList.remove("show"); });
+      calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        initialView: 'dayGridMonth',
+        locale: 'zh-cn',
+        events: events,
+        eventClick: function(info) {
+          showTaskDetails(info.event.id);
         }
       });
+      calendar.render();
     }
 
     function showTaskDetails(taskId) {
@@ -260,27 +262,38 @@
       } else {
         result.forEach(t => {
           div.innerHTML += `<div class='task ${t.done ? 'done' : ''} ${isDueSoon(t.dueDate) ? 'highlight' : ''}'>
-            <div><b>${t.subject}</b> ｜ 布置: ${t.assignDate} ｜ 提交: ${t.dueDate}</div>
-            <div>${t.content}</div>
+            <b>${t.subject}</b> - ${t.content} (布置时间: ${t.assignDate})(提交时间: ${t.dueDate})
           </div>`;
         });
       }
     }
 
+    // 修复输入异常，改用 keydown
     document.getElementById("search").addEventListener("keydown", function(e) {
-      if (e.key === "Enter") { e.preventDefault(); searchTasks(); }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        searchTasks();
+      }
     });
 
     function renderUpcomingTasks() {
       let div = document.getElementById('upcomingTasks');
       div.innerHTML = '';
-      if (!upcomingVisible) { div.style.display = "none"; return; } else { div.style.display = "block"; }
+      if (!upcomingVisible) {
+        div.style.display = "none";
+        return;
+      } else {
+        div.style.display = "block";
+      }
+
       let today = luxon.DateTime.local();
       let nextWeek = today.plus({ days: 7 });
+
       let upcoming = tasks.filter(t => {
         let due = luxon.DateTime.fromISO(t.dueDate);
         return due >= today && due <= nextWeek;
       }).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
       if (upcoming.length === 0) {
         div.innerHTML = '<p>一周内没有需要提交的作业 🎉</p>';
       } else {
@@ -298,7 +311,10 @@
       return due.diff(today, 'days').days <= 2 && due >= today;
     }
 
-    function toggleUpcoming() { upcomingVisible = !upcomingVisible; renderUpcomingTasks(); }
+    function toggleUpcoming() {
+      upcomingVisible = !upcomingVisible;
+      renderUpcomingTasks();
+    }
 
     renderCalendar();
     renderUpcomingTasks();
