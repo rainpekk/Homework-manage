@@ -128,7 +128,7 @@
     <button class="btn" onclick="toggleTheme()">🌙 深色模式</button>
   </div>
 
-  <h1>📚 作业管理系统</h1>
+  <h1>作业管理系统</h1>
 
   <!-- 添加作业表单 -->
   <div class="card">
@@ -262,7 +262,7 @@
       } else {
         result.forEach(t => {
           div.innerHTML += `<div class='task ${t.done ? 'done' : ''} ${isDueSoon(t.dueDate) ? 'highlight' : ''}'>
-            <b>${t.subject}</b> - ${t.content} (提交时间: ${t.dueDate})
+            <b>${t.subject}</b> - ${t.content} (布置时间: ${t.assignDate})(提交时间: ${t.dueDate})
           </div>`;
         });
       }
